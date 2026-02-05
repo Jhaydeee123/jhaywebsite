@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Valentine?</title>
+
+<style>
+body{
+  margin:0;
+  height:100vh;
+  font-family:"Georgia",cursive;
+  background:linear-gradient(#fff0f5,#ffe6ee);
+  overflow:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* Common particles */
+.flower,.heart,.firework{
+  position:absolute;
+  pointer-events:none;
+}
+
+/* Falling animation */
+@keyframes fall{
+  from{transform:translateY(-50px) rotate(0deg);}
+  to{transform:translateY(110vh) rotate(360deg);}
+}
+
+/* Initial flowers */
+.flower{
+  top:-50px;
+  font-size:24px;
+  animation:fall linear infinite;
+}
+
+/* Card */
+.card{
+  text-align:center;
+  background:linear-gradient(145deg,#ffe6ee,#fff0f5);
+  padding:40px;
+  border-radius:30px;
+  max-width:520px;
+  z-index:2;
+  box-shadow:0 15px 40px rgba(214,51,132,.35);
+}
+
+h1 span{color:#d63384;}
+p{color:#777;}
+
+img{
+  width:130px;
+  height:130px;
+  border-radius:50%;
+  object-fit:cover;
+  margin:20px 0;
+}
+
+button{
+  font-size:16px;
+  padding:10px 25px;
+  margin:10px;
+  border:none;
+  background:none;
+  cursor:pointer;
+}
+
+#yes{color:#d63384;font-weight:bold;}
+#no{color:#888;}
+
+input{
+  font-size:16px;
+  padding:8px;
+  border-radius:10px;
+  border:1px solid #d63384;
+  width:80%;
+  text-align:center;
+  margin-bottom:10px;
+}
+
+/* Floating heart pop */
+@keyframes pop{
+  from{transform:scale(1);opacity:1;}
+  to{transform:translateY(-300px) scale(1.8);opacity:0;}
+}
+
+/* Heart rain */
+.heart-fall{
+  top:-40px;
+  font-size:22px;
+  animation:fall linear forwards;
+}
+
+/* Card kilig shake */
+@keyframes kilig{
+  0%{transform:scale(1);}
+  25%{transform:scale(1.05) rotate(2deg);}
+  50%{transform:scale(1.08) rotate(-2deg);}
+  75%{transform:scale(1.05) rotate(1deg);}
+  100%{transform:scale(1);}
+}
+.card.kilig{animation:kilig .6s ease;}
+
+/* Firework explosion */
+.firework{
+  font-size:22px;
+  animation:explode 1.5s ease-out forwards;
+}
+@keyframes explode{
+  from{transform:translate(0,0) scale(1);opacity:1;}
+  to{transform:translate(var(--x),var(--y)) scale(0);opacity:0;}
+}
+
+/* Flash */
+#flash{
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle,rgba(255,182,193,.9),transparent 70%);
+  opacity:0;
+  pointer-events:none;
+  transition:.3s;
+  z-index:999;
+}
+
+/* Banner */
+#banner{
+  position:fixed;
+  top:-120px;
+  left:50%;
+  transform:translateX(-50%);
+  background:linear-gradient(45deg,#ff9ccf,#ff69b4);
+  color:white;
+  padding:20px 35px;
+  border-radius:30px;
+  font-weight:bold;
+  text-align:center;
+  line-height:1.4;
+  transition:.8s;
+  z-index:1000;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Background flowers -->
+<div class="flower" style="left:10%;animation-duration:10s">🌸</div>
+<div class="flower" style="left:30%;animation-duration:12s">🌸</div>
+<div class="flower" style="left:60%;animation-duration:9s">🌸</div>
+<div class="flower" style="left:80%;animation-duration:11s">🌸</div>
+
+<!-- Card -->
+<div class="card">
+  <h1 id="title">Will you be my Valentine, <span>Jirahjade</span>? 🌸</h1>
+  <p id="message">I, Jhaydee, am asking you to be my Valentine this February 14.</p>
+
+  <img src="https://image2url.com/r2/default/images/1770197776935-bb0063af-d027-4252-936f-fddae3d0fc18.jpg">
+
+  <div class="buttons">
+    <button id="yes" onclick="yesClick()">YES</button>
+    <button id="no" onclick="noClick()">NO</button>
+  </div>
+
+  <p id="note">You may answer now 💕</p>
+
+  <div id="date-plan" style="display:none;">
+    <input id="location" placeholder="Location 🌸">
+    <input id="time" placeholder="Time ⏰">
+    <input id="color" placeholder="Outfit Color 💖">
+    <input id="gift" placeholder="Gift 🎁">
+    <br>
+    <button onclick="confirmDate()">Confirm 💌</button>
+    <p id="confirmation"></p>
+  </div>
+</div>
+
+<div id="banner"></div>
+<div id="flash"></div>
+
+<!-- Romantic music -->
+<audio id="romanticSound">
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7c0b9f5a35.mp3">
+</audio>
+
+<script>
+let noCount=0;
+const messages=[
+  "Are you sure? 🥺",
+  "Sure na sure ka na ba?",
+  "Think about it again 😢",
+  "Last chance na talaga...",
+  "YES na lang 😏💖"
+];
+
+function noClick(){
+  message.innerText=messages[noCount]||"YES na lang 😌";
+  noCount++;
+}
+
+function yesClick(){
+  const card=document.querySelector(".card");
+  const sound=document.getElementById("romanticSound");
+  const flash=document.getElementById("flash");
+
+  title.innerText="PWEDE PA BA ULIT? 💖";
+  message.innerText="Still love u, since day one 🥰";
+  document.querySelector(".buttons").style.display="none";
+  document.getElementById("date-plan").style.display="block";
+
+  sound.currentTime=0;
+  sound.play();
+
+  flash.style.opacity="1";
+  setTimeout(()=>flash.style.opacity="0",300);
+
+  card.classList.add("kilig");
+  setTimeout(()=>card.classList.remove("kilig"),600);
+
+  for(let i=0;i<30;i++){
+    let h=document.createElement("div");
+    h.className="heart";
+    h.innerText="❤️";
+    h.style.left=Math.random()*100+"%";
+    h.style.animation=`pop ${1+Math.random()*2}s forwards`;
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),3000);
+  }
+
+  const cx=innerWidth/2, cy=innerHeight/2;
+  for(let i=0;i<40;i++){
+    let f=document.createElement("div");
+    f.className="firework";
+    f.innerText=["💖","💘","💕","❤️","💞"][Math.floor(Math.random()*5)];
+    f.style.left=cx+"px";
+    f.style.top=cy+"px";
+    f.style.setProperty("--x",(Math.random()*600-300)+"px");
+    f.style.setProperty("--y",(Math.random()*600-300)+"px");
+    document.body.appendChild(f);
+    setTimeout(()=>f.remove(),1500);
+  }
+
+  for(let i=0;i<40;i++){
+    let hf=document.createElement("div");
+    hf.className="heart heart-fall";
+    hf.innerText="💗";
+    hf.style.left=Math.random()*100+"%";
+    hf.style.animationDuration=(3+Math.random()*3)+"s";
+    document.body.appendChild(hf);
+    setTimeout(()=>hf.remove(),6000);
+  }
+
+  for(let i=0;i<25;i++){
+    let fl=document.createElement("div");
+    fl.className="flower";
+    fl.innerText="🌸";
+    fl.style.left=Math.random()*100+"%";
+    fl.style.fontSize="32px";
+    fl.style.animationDuration=(4+Math.random()*4)+"s";
+    document.body.appendChild(fl);
+    setTimeout(()=>fl.remove(),7000);
+  }
+}
+
+function confirmDate(){
+  if(location.value && time.value && color.value && gift.value){
+    confirmation.innerText="Perfect! 🌸 Date is set!";
+
+    banner.innerHTML=
+      `🎉 <strong>Yey! See you, Beng!</strong><br>
+       📍 ${location.value}<br>
+       ⏰ ${time.value} | 👗 ${color.value} | 🎁 ${gift.value}`;
+
+    banner.style.top="25px";
+    setTimeout(()=>banner.style.top="-120px",8000);
+  }else{
+    confirmation.innerText="Please fill in all fields 🥺";
+  }
+}
+</script>
+
+</body>
+</html>
